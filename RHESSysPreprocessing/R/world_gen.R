@@ -312,14 +312,16 @@ world_gen = function(template,
               varname = template_clean[[i]][1]
               cat("\t\t\t\t",var,"\t\t\t",varname,"\n",sep = "")
             }
+            stratum = unique(levels[levels[,5] == p & levels[,4] == z & levels[,3] == h & levels[,2] == b, 6])
             cat("\t\t\t\t",length(stratum),"\t\t\t","num_stratum\n",sep = "")
-
+            
             for (s in stratum) { #stratum
               cat("\t\t\t\t\t", s,"\t\t\t", "canopy_strata_ID\n",sep = "")
+              j=which(s==stratum)
               for (i in (level_index[6] + 1):length(template_clean)) {
-                if (length(statevars[[i]][[s]]) > 1) { # if is a map
-                  var = statevars[[i]][[s]][statevars[[i]][[s]][2] == b & statevars[[i]][[s]][3] == h & statevars[[i]][[s]][4] == z & statevars[[i]][[s]][5] == p ,"x"]
-                } else {var = statevars[[i]][[s]]}
+                if (length(statevars[[i]][[j]]) > 1) { # if is a map
+                  var = statevars[[i]][[j]][statevars[[i]][[j]][2] == b & statevars[[i]][[j]][3] == h & statevars[[i]][[j]][4] == z & statevars[[i]][[j]][5] == p ,"x"]
+                } else {var = statevars[[i]][[j]]}
                 varname = template_clean[[i]][1]
                 cat("\t\t\t\t\t",var,"\t\t\t",varname,"\n",sep = "")
               }
