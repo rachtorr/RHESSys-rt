@@ -30,7 +30,8 @@ world_gen = function(template,
                      overwrite = FALSE,
                      header = FALSE,
                      asprules = NULL,
-                     wrapper = FALSE) {
+                     wrapper = FALSE,
+                     impervious = NA) {
 
   # ---------- Check inputs ----------
   options(scipen = 999) # no scientific notation
@@ -62,10 +63,16 @@ world_gen = function(template,
   template_list = template_read(template)
 
   template_clean = template_list[[1]]
+  map_info = template_list[[5]]
+  if(!is.na(impervious)){
+    ind <- match(template_clean[grep("landuse_parm_ID",template_clean)], template_clean)
+    template_clean[[ind]][3] <- impervious
+    map_info[map_info[,1]=="landuse_parm_ID"][2] <- impervious
+  }
+
   var_names = template_list[[2]]
   level_index = template_list[[3]]
   var_index = template_list[[4]]
-  map_info = template_list[[5]]
   head = template_list[[6]]
   maps_in = unique(map_info[,2])
 
@@ -314,7 +321,7 @@ world_gen = function(template,
             }
             stratum = unique(levels[levels[,5] == p & levels[,4] == z & levels[,3] == h & levels[,2] == b, 6])
             cat("\t\t\t\t",length(stratum),"\t\t\t","num_stratum\n",sep = "")
-            
+
             for (s in stratum) { #stratum
               cat("\t\t\t\t\t", s,"\t\t\t", "canopy_strata_ID\n",sep = "")
               j=which(s==stratum)
