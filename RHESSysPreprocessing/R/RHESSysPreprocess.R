@@ -114,7 +114,8 @@ RHESSysPreprocess = function(template,
                             overwrite = overwrite,
                             header = header,
                             asprules = asprules,
-                            wrapper = wrapper)
+                            wrapper = wrapper,
+                            impervious=impervious)
 
   readin = world_gen_out[[1]]
   asp_list = world_gen_out[[2]]
@@ -141,10 +142,11 @@ RHESSysPreprocess = function(template,
                 roads = roads,
                 impervious = impervious,
                 roofs = roofs,
-                wrapper = wrapper,
+                wrapper = T,
                 parallel = parallel,
                 make_stream = make_stream,
-                d4 = d4)
+                d4 = d4,
+                road_width = road_width)
 
   # ---------- Run build_meta ----------
   # if (meta) {
