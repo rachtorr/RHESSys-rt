@@ -579,6 +579,9 @@ void		patch_daily_F(
 		}
 		else patch[0].rain_throughfall = zone[0].rain;
 			patch[0].rz_storage =+ irrigation; 
+			
+		patch[0].total_water_in = zone[0].rain + zone[0].snow + irrigation;
+			
 	/* the N_depo is add in patch_hourly.c in hourly */
 	/* it could be washed away hourly or daily, depending on whether the precipitation data is hourly or daily */
 	patch[0].NO3_throughfall = 0;
