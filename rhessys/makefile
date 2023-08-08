@@ -135,6 +135,7 @@ $(OBJ)/compute_maint_resp.o \
 $(OBJ)/compute_mean_hillslope_parameters.o \
 $(OBJ)/compute_nonvascular_stratum_conductance.o \
 $(OBJ)/compute_patch_family_routing.o \
+$(OBJ)/compute_patch_family_routing_surface.o\
 $(OBJ)/compute_potential_N_uptake.o \
 $(OBJ)/compute_potential_N_uptake_Dickenson.o \
 $(OBJ)/compute_potential_N_uptake_Waring.o \
@@ -881,6 +882,8 @@ $(OBJ)/compute_unsat_zone_drainage.o: hydro/compute_unsat_zone_drainage.c
 	$(CC) -c $(CFLAGS) -I include hydro/compute_unsat_zone_drainage.c -o $(OBJ)/compute_unsat_zone_drainage.o
 $(OBJ)/compute_patch_family_routing.o: hydro/compute_patch_family_routing.c
 	$(CC) -c $(CFLAGS) -I include hydro/compute_patch_family_routing.c -o $(OBJ)/compute_patch_family_routing.o
+$(OBJ)/compute_patch_family_routing_surface.o: hydro/compute_patch_family_routing_surface.c
+	$(CC) -c $(CFLAGS) -I include hydro/compute_patch_family_routing_surface.c -o $(OBJ)/compute_patch_family_routing_surface.o
 $(OBJ)/snowpack_daily_F.o: hydro/snowpack_daily_F.c
 	$(CC) -c $(CFLAGS) -I include hydro/snowpack_daily_F.c -o $(OBJ)/snowpack_daily_F.o
 $(OBJ)/sort_by_elevation.o: util/sort_by_elevation.c

@@ -104,9 +104,11 @@ struct landuse_default *construct_landuse_defaults(
 		default_object_list[i].grazing_Closs = 	getDoubleParam(&paramCnt, &paramPtr, "grazing_Closs", "%lf", 0.0, 1) / 365;
         default_object_list[i].sh_g = getDoubleParam(&paramCnt, &paramPtr, "sh_g", "%lf", 0.0, 1);
         default_object_list[i].sh_l = getDoubleParam(&paramCnt, &paramPtr, "sh_l", "%lf", 0.0, 1);
+        default_object_list[i].surf_g = getDoubleParam(&paramCnt, &paramPtr, "surf_g", "%lf", 0.0, 1);
 		default_object_list[i].msr_sat_transfer_flag = 		getIntParam(&paramCnt, &paramPtr, "msr_sat_transfer_flag", "%d", 0, 1);
         default_object_list[i].shading_flag = 		getIntParam(&paramCnt, &paramPtr, "shading_flag", "%d", 1, 1);
         default_object_list[i].routing_threshold = getDoubleParam(&paramCnt, &paramPtr, "routing_threshold", "%lf", 0.001, 1);
+        default_object_list[i].surface_routing_threshold = getDoubleParam(&paramCnt, &paramPtr, "surface_routing_threshold", "%lf", 0.0001, 1);
 
 		/*--------------------------------------------------------------*/
 		/*		Close the ith default file.								*/

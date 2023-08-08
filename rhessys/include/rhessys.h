@@ -1147,7 +1147,9 @@ struct  landuse_default
         double  grazing_Closs;                  /* kgC/m2/day */
         double  sh_l;                                   /* 0 - 1 */
         double  sh_g;                                   /* 0 - 1 */
+        double  surf_g;                                 /* 0 OFF 1 ON */
         double  routing_threshold;                      /* > 0, m/m (z/sat_def) */
+        double  surface_routing_threshold;                      /* > 0, m */
 };
 /*----------------------------------------------------------*/
 /*	Define an soil 	default object.						*/
@@ -1944,6 +1946,7 @@ struct patch_object
         double  T_canopy;  /* deg C */
         double  T_canopy_final;  /* deg C */
         double  rz_transfer;            /* m water      */
+        double  surface_transfer;       /* m water      */
         double  unsat_transfer;         /* m water      */
         double  sat_transfer;           /* m water      */
         struct  base_station_object     **base_stations;
