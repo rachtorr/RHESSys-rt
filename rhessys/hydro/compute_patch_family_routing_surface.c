@@ -38,6 +38,11 @@ void compute_patch_family_routing_surface(struct zone_object *zone,
 double compute_infiltration(int, double, double, double, double, double,
 			double, double, double, double, double);
 
+double compute_z_final(int, double, double, double, double, double);
+
+double compute_layer_field_capacity(int, int, double, double, double,
+			double, double, double, double, double, double);
+
     /*--------------------------------------------------------------*/
     /*	Local variable definition.			                        */
     /*--------------------------------------------------------------*/
@@ -67,13 +72,6 @@ double compute_infiltration(int, double, double, double, double, double,
     time_int = 1.0;
     grow_flag = command_line[0].grow_flag;
     verbose_flag = command_line[0].verbose_flag;
-
-    // for testing
-    // if (current_date.year == 2011 && current_date.month == 3 && current_date.day == 22) {
-    //     command_line[0].verbose_flag = -6;
-    // } else {
-    //     command_line[0].verbose_flag = 0;
-    // }
 
     /*--------------------------------------------------------------*/
     /*	Loop through patch families in the zone   	                */
@@ -324,7 +322,7 @@ double compute_infiltration(int, double, double, double, double, double,
 
                 }
       
-                // if gaining patch and surface transfer is greater than 0, infiltrate surface transfer 
+                // if gaining patch and surface transfer is greater than 0, infiltrate with surface transfer and update subsurface
                 /* add infiltration - copied 673 - 788 from compute_subsurface_routing p*/
                 if ((incl_surf[i]==2) &&
                     (zone[0].patch_families[pf][0].patches[i][0].surface_transfer > 0.0))
@@ -444,6 +442,63 @@ double compute_infiltration(int, double, double, double, double, double,
                         zone[0].patch_families[pf][0].patches[i][0].sat_deficit = 0.0;
                         zone[0].patch_families[pf][0].patches[i][0].unsat_storage = 0.0;
                     }
+
+                    /*--------------------------------------------------------------*/
+                    /* recompute saturation deficit					*/
+                    /*--------------------------------------------------------------*/
+                    zone[0].patch_families[pf][0].patches[i][0].sat_deficit_z = compute_z_final(verbose_flag,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].porosity_0,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].porosity_decay,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].soil_depth, 0.0,
+                            -1.0 * zone[0].patch_families[pf][0].patches[i][0].sat_deficit);
+
+                    /*--------------------------------------------------------------*/
+                    /*	compute new field capacity				*/
+                    /*--------------------------------------------------------------*/
+                    if (zone[0].patch_families[pf][0].patches[i][0].sat_deficit_z < zone[0].patch_families[pf][0].patches[i][0].rootzone.depth) 
+                    {
+                        zone[0].patch_families[pf][0].patches[i][0].rootzone.field_capacity = compute_layer_field_capacity(
+                            verbose_flag,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].theta_psi_curve,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].psi_air_entry,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].pore_size_index,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].p3,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].p4,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].porosity_0,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].porosity_decay,
+                            zone[0].patch_families[pf][0].patches[i][0].sat_deficit_z,
+                            zone[0].patch_families[pf][0].patches[i][0].rootzone.depth, 0.0);
+
+                        zone[0].patch_families[pf][0].patches[i][0].field_capacity = 0.0;
+                    } else 
+                    {
+
+                        zone[0].patch_families[pf][0].patches[i][0].rootzone.field_capacity = compute_layer_field_capacity(
+                            verbose_flag,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].theta_psi_curve,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].psi_air_entry,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].pore_size_index,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].p3,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].p4,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].porosity_0,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].porosity_decay,
+                            zone[0].patch_families[pf][0].patches[i][0].sat_deficit_z,
+                            zone[0].patch_families[pf][0].patches[i][0].rootzone.depth, 0.0);
+
+                        zone[0].patch_families[pf][0].patches[i][0].field_capacity = compute_layer_field_capacity(
+                            verbose_flag,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].theta_psi_curve,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].psi_air_entry,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].pore_size_index,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].p3,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].p4,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].porosity_0,
+                            zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].porosity_decay,
+                            zone[0].patch_families[pf][0].patches[i][0].sat_deficit_z, 
+                            zone[0].patch_families[pf][0].patches[i][0].sat_deficit_z, 0)
+                            - zone[0].patch_families[pf][0].patches[i][0].rootzone.field_capacity;
+                    }
+
                 }
             }
             
