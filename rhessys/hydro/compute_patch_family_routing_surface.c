@@ -350,8 +350,9 @@ double compute_layer_field_capacity(int, int, double, double, double,
                             (zone[0].patch_families[pf][0].patches[i][0].surface_transfer), time_int,
                             zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].psi_air_entry);
                     }
-               
+
                     printf("infiltration after transfer %f\n", infiltration); 
+                    printf("difference to det store: %f\n", zone[0].patch_families[pf][0].patches[i][0].surface_transfer-infiltration);
 
                         /*--------------------------------------------------------------*/
                         /* added an surface N flux to surface N pool	and		*/
@@ -359,21 +360,21 @@ double compute_layer_field_capacity(int, int, double, double, double,
                         /*--------------------------------------------------------------*/
                     if ((grow_flag > 0) && (infiltration > ZERO)) {
                         zone[0].patch_families[pf][0].patches[i][0].soil_ns.DON += ((infiltration
-                                / zone[0].patch_families[pf][0].patches[i][0].detention_store) * zone[0].patch_families[pf][0].patches[i][0].surface_DON);
+                                / zone[0].patch_families[pf][0].patches[i][0].surface_transfer) * zone[0].patch_families[pf][0].patches[i][0].surface_DON);
                         zone[0].patch_families[pf][0].patches[i][0].soil_cs.DOC += ((infiltration
-                                / zone[0].patch_families[pf][0].patches[i][0].detention_store) * zone[0].patch_families[pf][0].patches[i][0].surface_DOC);
+                                / zone[0].patch_families[pf][0].patches[i][0].surface_transfer) * zone[0].patch_families[pf][0].patches[i][0].surface_DOC);
                         zone[0].patch_families[pf][0].patches[i][0].soil_ns.nitrate += ((infiltration
-                                / zone[0].patch_families[pf][0].patches[i][0].detention_store) * zone[0].patch_families[pf][0].patches[i][0].surface_NO3);
+                                / zone[0].patch_families[pf][0].patches[i][0].surface_transfer) * zone[0].patch_families[pf][0].patches[i][0].surface_NO3);
                         zone[0].patch_families[pf][0].patches[i][0].surface_NO3 -= ((infiltration
-                                / zone[0].patch_families[pf][0].patches[i][0].detention_store) * zone[0].patch_families[pf][0].patches[i][0].surface_NO3);
+                                / zone[0].patch_families[pf][0].patches[i][0].surface_transfer) * zone[0].patch_families[pf][0].patches[i][0].surface_NO3);
                         zone[0].patch_families[pf][0].patches[i][0].soil_ns.sminn += ((infiltration
-                                / zone[0].patch_families[pf][0].patches[i][0].detention_store) * zone[0].patch_families[pf][0].patches[i][0].surface_NH4);
+                                / zone[0].patch_families[pf][0].patches[i][0].surface_transfer) * zone[0].patch_families[pf][0].patches[i][0].surface_NH4);
                         zone[0].patch_families[pf][0].patches[i][0].surface_NH4 -= ((infiltration
-                                / zone[0].patch_families[pf][0].patches[i][0].detention_store) * zone[0].patch_families[pf][0].patches[i][0].surface_NH4);
+                                / zone[0].patch_families[pf][0].patches[i][0].surface_transfer) * zone[0].patch_families[pf][0].patches[i][0].surface_NH4);
                         zone[0].patch_families[pf][0].patches[i][0].surface_DOC -= ((infiltration
-                                / zone[0].patch_families[pf][0].patches[i][0].detention_store) * zone[0].patch_families[pf][0].patches[i][0].surface_DOC);
+                                / zone[0].patch_families[pf][0].patches[i][0].surface_transfer) * zone[0].patch_families[pf][0].patches[i][0].surface_DOC);
                         zone[0].patch_families[pf][0].patches[i][0].surface_DON -= ((infiltration
-                                / zone[0].patch_families[pf][0].patches[i][0].detention_store) * zone[0].patch_families[pf][0].patches[i][0].surface_DON);
+                                / zone[0].patch_families[pf][0].patches[i][0].surface_transfer) * zone[0].patch_families[pf][0].patches[i][0].surface_DON);
                     }
 
                         /*--------------------------------------------------------------*/
@@ -443,6 +444,8 @@ double compute_layer_field_capacity(int, int, double, double, double,
                         zone[0].patch_families[pf][0].patches[i][0].unsat_storage = 0.0;
                     }
 
+                    zone[0].patch_families[pf][0].patches[i][0].detention_store += (zone[0].patch_families[pf][0].patches[i][0].surface_transfer - infiltration); 
+
                     /*--------------------------------------------------------------*/
                     /* recompute saturation deficit					*/
                     /*--------------------------------------------------------------*/
@@ -498,6 +501,8 @@ double compute_layer_field_capacity(int, int, double, double, double,
                             zone[0].patch_families[pf][0].patches[i][0].sat_deficit_z, 0)
                             - zone[0].patch_families[pf][0].patches[i][0].rootzone.field_capacity;
                     }
+
+
 
                 }
             }
