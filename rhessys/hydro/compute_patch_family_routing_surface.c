@@ -51,21 +51,14 @@ double compute_layer_field_capacity(int, int, double, double, double,
     int pf;
     int i;
     int p_ct;            // number of patches in patch family
-    double wet_mean_surf_l;     // mean wetness for surface above detention store size, meters water, if loss
-    double wet_mean_surf_g;     // mean wetness for surface above detention store size, meters water, if gains
-    double wet_mean_surf;    // mean wetness for surface above detention store size, meters water
-    double area_sum_l;     // sum of areas in patch family
-    double area_sum_g;       // sum of gaining patches area 
+    double wet_mean_surf_l; // sum of wetness for surface above detention store size, meters water, for all patches that could Lose
+    double wet_mean_surf;  // mean wetness for surface above detention store size, meters water
+    double area_sum_g;    // sum of Gaining patches area 
     double dG_pot;       // sum of (potential) surface gains over entire family 
     double dL_pot;      // sum of surface losses over entire family 
     double surf_trans; //intermediate vars for surface transfer
-    double time_int;  //
-    double infiltration; 
-    double dL_excess; //some amount extra from what is being taken from impervious patch 
-    double dG_excess; 
-    double wet_mean_surf_imp; 
-    double area_imp;  
-
+    double time_int;  
+    double infiltration;  
 
     /* initializations */
     // set time_int equal to 1 
@@ -94,17 +87,11 @@ double compute_layer_field_capacity(int, int, double, double, double,
 
         /* Initializations */
         wet_mean_surf_l = 0;
-        wet_mean_surf_g = 0;
         wet_mean_surf = 0;
-        area_sum_l = 0;
         area_sum_g = 0;
         dG_pot = 0;
         dL_pot = 0;
         surf_trans = 0; 
-        dL_excess = 0;
-        dG_excess = 0;
-        wet_mean_surf_imp = 0; 
-        area_imp = 0;
         infiltration = 0; 
 
 
@@ -133,7 +120,7 @@ double compute_layer_field_capacity(int, int, double, double, double,
             }
 
             incl_surf[i] = 0.0; 
-            // check if patch is able to gain, assign 0 is not, otherwise assign 1 if losing patch
+            // check if patch is able to gain, assign 0 if not, otherwise assign 1 if losing patch
             if(wet_surf[i]>=0.0 && zone[0].patch_families[pf][0].patches[i][0].landuse_defaults[0][0].surf_g==0) 
             {
                 incl_surf[i] = 0.0;
@@ -148,13 +135,9 @@ double compute_layer_field_capacity(int, int, double, double, double,
                 if(zone[0].patch_families[pf][0].patches[i][0].landuse_defaults[0][0].surf_g==1) 
                 {
                     area_sum_g += zone[0].patch_families[pf][0].patches[i][0].area;
-                    wet_mean_surf_g += wet_surf[i] * zone[0].patch_families[pf][0].patches[i][0].area;
-
                 }
 
                 // add amount by area and wetness to get total water amount and area 
-                area_sum_l += zone[0].patch_families[pf][0].patches[i][0].area; 
-                
                 wet_mean_surf_l += wet_surf[i] * zone[0].patch_families[pf][0].patches[i][0].area;
 
             }
@@ -206,7 +189,6 @@ double compute_layer_field_capacity(int, int, double, double, double,
                     (wet_surf[i] > zone[0].patch_families[pf][0].patches[i][0].landuse_defaults[0][0].surface_routing_threshold) && 
                     (zone[0].patch_families[pf][0].patches[i][0].landuse_defaults[0][0].surf_g==0))
                 {
-
                     //loss should equal the minimum of det. store capacity and wet_surf for impervious patches where surf_g = 0, if no gains, will also simplify and lose everything 
                     dL[i] = (wet_surf[i]) * zone[0].patch_families[pf][0].patches[i][0].area;
                     
@@ -268,7 +250,7 @@ double compute_layer_field_capacity(int, int, double, double, double,
                     }else{   
                         dG[i] = 0;
                     }
-                    // all of gaining water (dG) goes to, unless patch cannot gain
+                    // all of gaining water (dG) goes to infiltration, unless patch cannot gain
                     // surface detention store gain
                     if(dG[i] > 0.0){
                         
@@ -501,8 +483,6 @@ double compute_layer_field_capacity(int, int, double, double, double,
                             zone[0].patch_families[pf][0].patches[i][0].sat_deficit_z, 0)
                             - zone[0].patch_families[pf][0].patches[i][0].rootzone.field_capacity;
                     }
-
-
 
                 }
             }
