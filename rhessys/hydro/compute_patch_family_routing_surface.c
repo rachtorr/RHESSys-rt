@@ -186,7 +186,7 @@ double compute_layer_field_capacity(int, int, double, double, double,
             {
                 // if is pavement or roof patch 
                 if ((incl_surf[i]==0.0) && 
-                    (wet_surf[i] > zone[0].patch_families[pf][0].patches[i][0].landuse_defaults[0][0].surface_routing_threshold) && 
+                    (wet_surf[i] > 0.0) && 
                     (zone[0].patch_families[pf][0].patches[i][0].landuse_defaults[0][0].surf_g==0))
                 {
                     //loss should equal the minimum of det. store capacity and wet_surf for impervious patches where surf_g = 0, if no gains, will also simplify and lose everything 
@@ -198,12 +198,12 @@ double compute_layer_field_capacity(int, int, double, double, double,
                 
                 // if - included and surface is > mean (losers)
                 if ((incl_surf[i] > 0.0) && 
-                ((wet_surf[i] - wet_mean_surf) > zone[0].patch_families[pf][0].patches[i][0].landuse_defaults[0][0].surface_routing_threshold))
+                ((wet_surf[i] - wet_mean_surf) > 0.0))
                 {
                     dL[i] = (wet_surf[i] - wet_mean_surf) * zone[0].patch_families[pf][0].patches[i][0].area;
                 }
                 else if (incl_surf[i] >= 0.0 && 
-                (-(wet_surf[i] - wet_mean_surf) > zone[0].patch_families[pf][0].patches[i][0].landuse_defaults[0][0].surface_routing_threshold) && 
+                (-(wet_surf[i] - wet_mean_surf) > 0.0) && 
                 (zone[0].patch_families[pf][0].patches[i][0].landuse_defaults[0][0].surf_g > 0))
                 {
                 // is a gaining patch

@@ -1149,7 +1149,6 @@ struct  landuse_default
         double  sh_g;                                   /* 0 - 1 */
         double  surf_g;                                 /* 0 OFF 1 ON */
         double  routing_threshold;                      /* > 0, m/m (z/sat_def) */
-        double  surface_routing_threshold;                      /* > 0, m */
         double  drip_irr;                               /* 0 off 1 on */ 
 };
 /*----------------------------------------------------------*/
