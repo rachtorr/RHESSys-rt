@@ -155,7 +155,7 @@ double compute_layer_field_capacity(int, int, double, double, double,
 
         } // end loop 1
 
-        if(zone[0].patch_families[pf][0].num_patches_in_fam>1)
+        if(zone[0].patch_families[pf][0].num_patches_in_fam>1 & wet_mean_surf_l>0.0)
         {
     
             // Get mean wetness - vol water/(total patch family) area - units are meters depth
@@ -183,7 +183,9 @@ double compute_layer_field_capacity(int, int, double, double, double,
 
              // loop to move water off of impervious area 
             for (i = 0; i < zone[0].patch_families[pf][0].num_patches_in_fam; i++)
-            {
+            {   
+                dL[i] = 0; //initialize 
+
                 // if is pavement or roof patch 
                 if ((incl_surf[i]==0.0) && 
                     (wet_surf[i] > 0.0) && 
@@ -239,6 +241,8 @@ double compute_layer_field_capacity(int, int, double, double, double,
 
             for (i = 0; i < zone[0].patch_families[pf][0].num_patches_in_fam; i++)
             {
+                dG[i] = 0; // initialize 
+                
                 // if < mean wetness (gainers)   
                 if ((incl_surf[i] == 2) && 
                     (dL_pot > 0.0))
