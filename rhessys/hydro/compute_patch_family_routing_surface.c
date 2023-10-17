@@ -337,9 +337,11 @@ double compute_layer_field_capacity(int, int, double, double, double,
                             zone[0].patch_families[pf][0].patches[i][0].soil_defaults[0][0].psi_air_entry);
                     }
 
-                    printf("infiltration after transfer %f\n", infiltration); 
-                    printf("difference to det store: %f\n", zone[0].patch_families[pf][0].patches[i][0].surface_transfer-infiltration);
-
+                    if(command_line[0].verbose_flag == -6){
+                        printf("infiltration after transfer %f\n", infiltration); 
+                        printf("difference to det store: %f\n", zone[0].patch_families[pf][0].patches[i][0].surface_transfer-infiltration);
+                    }
+                    
                         /*--------------------------------------------------------------*/
                         /* added an surface N flux to surface N pool	and		*/
                         /* allow infiltration of surface N				*/
@@ -371,7 +373,6 @@ double compute_layer_field_capacity(int, int, double, double, double,
                         /*--------------------------------------------------------------*/
 
                     if (infiltration > zone[0].patch_families[pf][0].patches[i][0].sat_deficit - zone[0].patch_families[pf][0].patches[i][0].unsat_storage - zone[0].patch_families[pf][0].patches[i][0].rz_storage) {
-                        printf("infiltration option 1\n");
                         /*--------------------------------------------------------------*/
                         /*		Yes the unsat zone will be filled so we may	*/
                         /*		as well treat the unsat_storage and infiltration*/
@@ -390,7 +391,6 @@ double compute_layer_field_capacity(int, int, double, double, double,
                     else if ((zone[0].patch_families[pf][0].patches[i][0].sat_deficit
                         > zone[0].patch_families[pf][0].patches[i][0].rootzone.potential_sat) && (infiltration > zone[0].patch_families[pf][0].patches[i][0].rootzone.potential_sat - zone[0].patch_families[pf][0].patches[i][0].rz_storage)) 
                     {
-                        printf("infiltration option 2\n");
                             /*------------------------------------------------------------------------------*/
                             /*		Just add the infiltration to the rz_storage and unsat_storage	*/
                             /*------------------------------------------------------------------------------*/
@@ -403,7 +403,6 @@ double compute_layer_field_capacity(int, int, double, double, double,
                                     <= zone[0].patch_families[pf][0].patches[i][0].rootzone.potential_sat
                                             - zone[0].patch_families[pf][0].patches[i][0].rz_storage))
                     {
-                        printf("infiltration option 3\n");
                             /*--------------------------------------------------------------*/
                             /*		Just add the infiltration to the rz_storage	*/
                             /*--------------------------------------------------------------*/
@@ -415,7 +414,6 @@ double compute_layer_field_capacity(int, int, double, double, double,
                                     <= zone[0].patch_families[pf][0].patches[i][0].sat_deficit - zone[0].patch_families[pf][0].patches[i][0].rz_storage
                                             - zone[0].patch_families[pf][0].patches[i][0].unsat_storage)) 
                     {
-                        printf("infiltration option 4\n");
                         zone[0].patch_families[pf][0].patches[i][0].rz_storage += zone[0].patch_families[pf][0].patches[i][0].unsat_storage;
                         /* transfer left water in unsat storage to rootzone layer */
                         zone[0].patch_families[pf][0].patches[i][0].unsat_storage = 0;
