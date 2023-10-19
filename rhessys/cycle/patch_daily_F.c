@@ -588,16 +588,10 @@ void		patch_daily_F(
 	patch[0].rain_throughfall = zone[0].rain;
 
 	if (patch[0].landuse_defaults[0][0].drip_irr == 0.0){
-		patch[0].detention_store += irrigation;
+		patch[0].rain_throughfall += irrigation;
 		}
 		else{
-			if (irrigation > (patch[0].rootzone.potential_sat - patch[0].rz_storage)){
-				patch[0].unsat_storage += irrigation - (patch[0].rootzone.potential_sat - patch[0].rz_storage);
-				patch[0].rz_storage = patch[0].rootzone.potential_sat;
-			}
-			else {
-				patch[0].rz_storage += irrigation;
-			}		
+		patch[0].rz_storage += irrigation;
 		} 
 			
 	patch[0].total_water_in = zone[0].rain + zone[0].snow + irrigation;
